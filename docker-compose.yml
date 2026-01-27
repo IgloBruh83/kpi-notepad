@@ -1,0 +1,20 @@
+services:
+  api:
+    build: ./backend
+    container_name: kpinotepad-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASS}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  web:
+    build: ./frontend
+    container_name: kpinotepad-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api
