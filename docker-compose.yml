@@ -14,6 +14,8 @@ services:
   web:
     build: ./frontend
     container_name: kpinotepad-frontend
+    volumes:
+      - ./uploads/img:/usr/share/nginx/html/img/uploads:ro
     ports:
       - "80:80"
     depends_on:
