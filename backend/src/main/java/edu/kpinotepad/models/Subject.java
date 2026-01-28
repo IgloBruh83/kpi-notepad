@@ -23,7 +23,10 @@ public class Subject {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(length = 255)
-    private String officialLink;
+    @Column(columnDefinition = "TEXT")
+    private String generalInfo;
+
+    @Column(columnDefinition = "TEXT")
+    private String conditions;
 
 }

@@ -7,6 +7,7 @@ import UnderConstructionPage from './pages/UnderConstruct';
 import './assets/css/fonts.css';
 import './assets/css/style.css';
 import './assets/css/auth.css';
+import SubjectsPage from './pages/SubjectsPage';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
@@ -34,7 +35,7 @@ const App: React.FC = () => {
           <Routes>
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/tasks" element={<UnderConstructionPage />} />
-            <Route path="/subjects" element={<UnderConstructionPage />} />
+            <Route path="/subjects" element={<SubjectsPage />} />
             <Route path="/group" element={<UnderConstructionPage />} />
             <Route path="/" element={<Navigate to="/calendar" replace />} />
             <Route path="*" element={<Navigate to="/calendar" replace />} />

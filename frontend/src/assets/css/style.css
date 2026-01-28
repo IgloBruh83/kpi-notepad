@@ -224,3 +224,50 @@ hr {
     min-height: 80vh;
     width: 100%;
 }
+
+#subjects-main {
+    display: flex;
+    width: 100%;
+    margin-top: 50px;
+    gap: 10px;
+    flex-direction: column;
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+.subject-item {
+    padding-left: 50px;
+    padding-right: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.subject-item-left {
+    width: 50%;
+    white-space: pre-wrap;
+}
+
+.subject-item-right {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: row;
+    gap: 15px;
+    padding-top: 15px
+}
+
+.portrait {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.leftMarg {
+    margin-left: 10px;
+}
+
+.portrait img {
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 5px;
+}
