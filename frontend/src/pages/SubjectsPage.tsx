@@ -13,7 +13,7 @@ const SubjectList = () => {
 
     useEffect(() => {
         // Фетчимо дані з твого API
-        fetch('http://localhost:8080/api/subjects')
+        fetch('/api/subjects')
             .then(response => response.json())
             .then(data => {
                 setSubjects(data);
