@@ -2,59 +2,42 @@ package edu.kpinotepad.controllers;
 
 import edu.kpinotepad.dto.AuthRequest;
 import edu.kpinotepad.dto.AuthResponse;
-import edu.kpinotepad.models.Student;
-import edu.kpinotepad.repositories.StudentRepository;
-import edu.kpinotepad.services.PasswordControl;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
+import edu.kpinotepad.security.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
 
-    private final StudentRepository studentRepository;
-    private final PasswordControl passwordControl;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request, HttpServletResponse response) {
-        return studentRepository.findByLogin(request.getLogin())
-                .map(student -> {
-                    if (passwordControl.match(request.getPassword(), student.getPassword())) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
 
-                        Cookie authCookie = new Cookie("authToken", student.getLogin());
-                        authCookie.setHttpOnly(true);
-                        authCookie.setPath("/");
-                        authCookie.setMaxAge(604800);
-                        response.addCookie(authCookie);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                        return ResponseEntity.ok(AuthResponse.builder()
-                                .success(true)
-                                .message("SUCCESS: Auth")
-                                .role(student.getRole().name())
-                                .username(student.getFirstName())
-                                .build());
-                    }
-                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                            .body(new AuthResponse(false, "FAIL: Invalid password", null, null));
-                })
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new AuthResponse(false, "FAIL: Invalid login", null, null)));
-    }
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-    @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("authToken", null);
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(0);
-
-        response.addCookie(cookie);
-        return ResponseEntity.ok().build();
+        assert userDetails != null;
+        return ResponseEntity.ok(AuthResponse.builder()
+                .success(true)
+                .message("SUCCESS: Auth")
+                .token(jwt)
+                .role(userDetails.getAuthorities().iterator().next().getAuthority())
+                .username(userDetails.getUsername())
+                .build());
     }
 }

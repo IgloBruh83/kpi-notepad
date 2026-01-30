@@ -1,8 +1,9 @@
 import { DayRenderDTO } from '../types';
+import { protectedFetch } from './protectedFetch';
 
 export const lessonService = {
   async getDaySchedule(date: string): Promise<DayRenderDTO> {
-    const response = await fetch(`/api/lessons/day?date=${date}`, {
+    const response = await protectedFetch(`/api/lessons/day?date=${date}`, {
     credentials: 'include'
 });
     if (!response.ok) {
@@ -12,7 +13,7 @@ export const lessonService = {
   },
 
   async getRangeSchedule(startDate: string, count: number = 9) {
-    const response = await fetch(`/api/lessons/range?start=${startDate}&count=${count}`, {
+    const response = await protectedFetch(`/api/lessons/range?start=${startDate}&count=${count}`, {
     credentials: 'include'
 });
     if (!response.ok) {

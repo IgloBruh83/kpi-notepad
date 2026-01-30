@@ -16,10 +16,6 @@ public class KpinotepadApplication {
     }
 
     public static void main(String[] args) {
-
-        PasswordControl pc = new PasswordControl();
-        System.out.println(pc.hash("DemN_9Bsj40"));
-
         SpringApplication.run(KpinotepadApplication.class, args);
     }
 

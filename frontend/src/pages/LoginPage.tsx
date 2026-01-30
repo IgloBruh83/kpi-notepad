@@ -5,7 +5,6 @@ interface Props {
 }
 
 const LoginPage: React.FC<Props> = ({ onLogin }) => {
-
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
@@ -13,23 +12,23 @@ const LoginPage: React.FC<Props> = ({ onLogin }) => {
     e.preventDefault();
 
     try {
-      // Використовуємо твій новий ендпоїнт
+      // 1. Використовуємо стандартний fetch для логіна (тут токен ще не потрібен)
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        // Поля відповідають AuthRequest.java
         body: JSON.stringify({ login, password }),
-        // Дозволяє браузеру приймати та зберігати кукі від сервера
-        credentials: 'include', 
       });
 
-      // Отримуємо дані згідно з AuthResponse.java
+      // 2. Отримуємо дані згідно з твоєю новою структурою AuthResponse.java
       const data = await response.json();
 
-      if (response.ok && data.success) {
-        // Зберігаємо допоміжні дані для UI
+      if (response.ok && data.token) { // Перевіряємо наявність токена
+        // 3. Зберігаємо "паспорт" уlocalStorage для protectedFetch
+        localStorage.setItem('token', data.token); 
+        
+        // 4. Зберігаємо допоміжні дані для UI та прав доступу
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('username', data.username);
         localStorage.setItem('role', data.role);
@@ -38,11 +37,11 @@ const LoginPage: React.FC<Props> = ({ onLogin }) => {
         onLogin();
       } else {
         // Виводимо повідомлення про помилку з сервера
-        alert(data.message || 'Помилка авторизації');
+        alert(data.message || 'Помилка авторизації: Перевір логін або пароль');
       }
     } catch (error) {
       console.error('Помилка запиту:', error);
-      alert('Не вдалося з’єднатися з сервером. Перевір, чи запущено Spring Boot.');
+      alert('Не вдалося з’єднатися з сервером. Перевір, чи запущено Spring Boot та базу даних.');
     }
   };
 

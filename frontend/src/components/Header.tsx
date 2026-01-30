@@ -12,7 +12,7 @@ export default function Header() {
         <Link to="/group">Група</Link>
       </nav>
       <div>
-        <button className="account-btn">Аккаунт</button>
+        {/*<button className="account-btn">Аккаунт</button>*/}
       </div>
     </header>
   );

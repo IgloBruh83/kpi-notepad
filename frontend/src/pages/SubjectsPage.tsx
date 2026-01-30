@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SubjectDTO } from '../types';
+import { protectedFetch } from '../services/protectedFetch';
 
 const roleTranslations: Record<string, string> = {
     'LECTURE': 'Лектор',
@@ -13,7 +14,7 @@ const SubjectList = () => {
 
     useEffect(() => {
         // Фетчимо дані з твого API
-        fetch('/api/subjects')
+        protectedFetch('/api/subjects')
             .then(response => response.json())
             .then(data => {
                 setSubjects(data);

@@ -7,6 +7,8 @@ import edu.kpinotepad.services.ScheduleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -37,9 +39,12 @@ public class CalendarController {
      */
     @GetMapping("/range")
     public MultiDayRenderDTO getMultiDaySchedule(
-            @CookieValue(value = "authToken", required = false) String login,
+            @AuthenticationPrincipal UserDetails userDetails,
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
             @RequestParam(value = "count", defaultValue = "9") int count) {
+
+        String login = (userDetails != null) ? userDetails.getUsername() : null;
+
         return lessonService.getMultiDaySchedule(startDate, count, login);
     }
 
