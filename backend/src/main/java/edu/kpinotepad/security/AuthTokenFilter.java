@@ -1,5 +1,6 @@
 package edu.kpinotepad.security;
 
+import edu.kpinotepad.services.StudentService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsServiceImpl userDetailsService;
+    private final StudentService studentService;
 
     @Override
     @NullMarked
@@ -36,6 +38,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                studentService.updateLastLogin(username);
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);

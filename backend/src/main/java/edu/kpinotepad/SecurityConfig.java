@@ -3,6 +3,7 @@ package edu.kpinotepad;
 import edu.kpinotepad.security.AuthTokenFilter;
 import edu.kpinotepad.security.JwtUtils;
 import edu.kpinotepad.security.UserDetailsServiceImpl;
+import edu.kpinotepad.services.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,10 +33,11 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtils jwtUtils;
+    private final StudentService studentService;
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter(jwtUtils, userDetailsService);
+        return new AuthTokenFilter(jwtUtils, userDetailsService, studentService);
     }
 
     @Bean
@@ -61,7 +63,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**", "/error").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 );
