@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useLayoutEffect, useState } from 'react';
-import { DayRenderDTO, MultiDayRenderDTO, LessonDTO } from '../types';
+import React, { useRef, useEffect, useLayoutEffect, useState, RefObject } from 'react';
+import { useContainerWidth } from '../hooks/useContainerWidth';
+import { DayRenderDTO, MultiDayRenderDTO } from '../types';
 import { lessonService } from '../services/lessonService';
 
 const getLessonTime = (position: number) => {
@@ -36,15 +37,19 @@ const CalendarPage: React.FC = () => {
   const [schedule, setSchedule] = useState<DayRenderDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const dayWidth = 287;
+  const containerWidth = useContainerWidth(calendarRef);
+  const minCardWidth = 280;
   const gap = 10;
-  const scrollStep = dayWidth + gap;
+
+  const cardsCount = Math.max(1, Math.floor((containerWidth + gap) / (minCardWidth + gap)));
+  const dynamicDayWidth = (containerWidth - (cardsCount - 1) * gap) / cardsCount;
+  const scrollStep = dynamicDayWidth + gap;
 
   useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const data: MultiDayRenderDTO = await lessonService.getRangeSchedule("2026-01-01", 150); 
+        const data: MultiDayRenderDTO = await lessonService.getRangeSchedule("2026-02-01", 150); 
         setSchedule(data.days);
       } finally {
         setLoading(false);
@@ -53,8 +58,38 @@ const CalendarPage: React.FC = () => {
     loadData();
   }, []);
 
+  useEffect(() => {
+  if (loading || schedule.length === 0) return;
+
+  const observerOptions = {
+    root: calendarRef.current,
+    rootMargin: '0px -15% 0px -15%', 
+    threshold: 0.1
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+      } else {
+        entry.target.classList.remove('is-visible');
+      }
+    });
+  }, observerOptions);
+
+  const timeoutId = setTimeout(() => {
+    const cards = calendarRef.current?.querySelectorAll('.calendar-day');
+    cards?.forEach((card) => observer.observe(card));
+  }, 100);
+
+  return () => {
+    clearTimeout(timeoutId);
+    observer.disconnect();
+  };
+}, [schedule, loading, containerWidth]);
+
   useLayoutEffect(() => {
-    if (calendarRef.current && schedule.length > 0) {
+    if (calendarRef.current && schedule.length > 0 && containerWidth > 0) {
       const today = new Date().toISOString().split('T')[0];
       const todayIdx = schedule.findIndex(d => d.date === today);
       if (todayIdx !== -1) {
@@ -63,12 +98,12 @@ const CalendarPage: React.FC = () => {
         targetScrollLeft.current = offset;
       }
     }
-  }, [schedule]);
+  }, [schedule, containerWidth, scrollStep]);
 
   const scroll = (direction: 'left' | 'right') => {
     if (calendarRef.current) {
       targetScrollLeft.current += (direction === 'left' ? -scrollStep : scrollStep);
-      const max = (schedule.length - 1) * scrollStep;
+      const max = (schedule.length - cardsCount) * scrollStep;
       targetScrollLeft.current = Math.max(0, Math.min(targetScrollLeft.current, max));
       calendarRef.current.scrollTo({ left: targetScrollLeft.current, behavior: 'smooth' });
     }
@@ -103,8 +138,22 @@ const CalendarPage: React.FC = () => {
       elements.push(
         <div key={lesson.id} className={lesson.type === 'LECTURE' ? 'sch-class-lec' : 'sch-class-prac'}>
           <h6><b>({lesson.position})</b> {lesson.subjectName}</h6>
-          {lesson.place && <i className="fa-regular fa-circle-play"></i> && <span>{lesson.place}</span>}
-          {isLive(day.date, lesson.position) && <span style={{ color: 'red' }}> ● Зараз</span>}
+          {lesson.place && (
+            <>
+              {lesson.link ? (
+                <a href={lesson.link} target="_blank" rel="noopener noreferrer">
+                  <i className="fa-regular fa-circle-play"></i> {lesson.place}
+                </a>
+              ) : (
+                <span>{lesson.place}</span>
+              )}
+              {isLive(day.date, lesson.position) && <>
+              <span> | </span>
+              <span style={{ color: 'red' }}>● Зараз</span>
+              </>}
+              <br />
+            </>
+          )}
           <i className="fa-regular fa-clock"></i>
           <span>{getLessonTime(lesson.position)}</span><br />
           <i className="fa-regular fa-user"></i>
@@ -135,22 +184,21 @@ const CalendarPage: React.FC = () => {
   return elements;
 };
 
-  if (loading) return (
-      <div className="centering loading">
-        <h3>Loading...</h3>
-      </div>
-  );
-
   return (
     <div className="calendar-wrapper">
       <div className="nav-zone left-zone" onClick={() => scroll('left')}><i className="fa-solid fa-chevron-left"></i></div>
       <div className="nav-zone right-zone" onClick={() => scroll('right')}><i className="fa-solid fa-chevron-right"></i></div>
 
-      <div id="calendar-main" ref={calendarRef}>
+      <div id="calendar-main" ref={calendarRef} style={{ display: 'flex', gap: `${gap}px`, overflowX: 'hidden' }}>
         {schedule.map((day) => {
           const isToday = day.date === new Date().toISOString().split('T')[0];
+          console.log(dynamicDayWidth);
           return (
-            <div className="calendar-day" key={day.date}>
+            <div className="calendar-day" key={day.date} style={{ 
+              width: `${dynamicDayWidth}px`,
+              minWidth: `${dynamicDayWidth}px`,
+              flexShrink: 0
+            }}>
               <div className="block">
                 <h5 style={{ textAlign: 'center', margin: 0 }}>
                   {new Date(day.date).toLocaleDateString('uk-UA', { day: '2-digit', month: '2-digit' })} - {new Date(day.date).toLocaleDateString('uk-UA', { weekday: 'long' })}

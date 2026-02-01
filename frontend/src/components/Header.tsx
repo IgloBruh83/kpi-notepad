@@ -1,19 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useWindowWidth } from '../hooks/useWindowWidth';
 
-export default function Header() {
+const Header: React.FC = () => {
+  const width = useWindowWidth();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const isMobile: boolean = width <= 768;
+
+  const toggleMenu = (): void => setIsOpen(!isOpen);
+  const closeMenu = (): void => setIsOpen(false);
+
   return (
-    <header>
+    <header className="header-container">
       <h1>KPI Notepad</h1>
-      <nav>
-        <Link to="/calendar">Календар</Link>
-        <Link to="/tasks">Завдання</Link>
-        <Link to="/subjects">Предмети</Link>
-        <Link to="/group">Група</Link>
+      
+      {isMobile && (
+        <button className="burger-btn" onClick={toggleMenu}>
+          {isOpen ? '✕' : '☰'}
+        </button>
+      )}
+
+      <nav className={`${isMobile ? 'nav-mobile' : 'nav-desktop'} ${isOpen ? 'is-open' : ''}`}>
+        <Link to="/calendar" onClick={closeMenu}>Календар</Link>
+        <Link to="/tasks" onClick={closeMenu}>Завдання</Link>
+        <Link to="/subjects" onClick={closeMenu}>Предмети</Link>
+        <Link to="/group" onClick={closeMenu}>Група</Link>
       </nav>
-      <div>
-        {/*<button className="account-btn">Аккаунт</button>*/}
-      </div>
+
+      {!isMobile && <div style={{ width: '40px' }}></div>}
     </header>
   );
 }
+
+export default Header;

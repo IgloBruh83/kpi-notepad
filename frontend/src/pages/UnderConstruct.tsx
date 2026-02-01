@@ -17,8 +17,8 @@ const UnderConstructionPage: React.FC = () => {
           <h2 style={{ fontFamily: '"Arial Black", Gadget, sans-serif' }}>
             UNDER CONSTRUCTION
           </h2>
-          <h5>Ця частина сайту ще не готова, бо розробник</h5>
-            <h5>намагається вчити React на ходу і нічо не розуміє...</h5>
+          <h5>Ця частина сайту ще не готова...</h5>
+            <h5>Поки що тут тільки будівельний кіт</h5>
         </div>
       </div>
     </div>

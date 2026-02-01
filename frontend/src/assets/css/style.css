@@ -22,18 +22,6 @@ body::-webkit-scrollbar {
     flex-direction: column;
 }
 
-header {
-    position: relative;
-    background-color: #ffffff;
-    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 20px;
-    padding: 15px 75px;
-    z-index: 2000;
-}
-
 h1 {
     font-family: 'VividSans', sans-serif;
     color: #333333;
@@ -84,13 +72,19 @@ button {
     width: 100%;
     margin-top: 50px;
     gap: 10px;
-    touch-action: none;
+    touch-action: pan-y;
 
     padding-left: 30px;
     padding-right: 30px; 
     box-sizing: border-box; 
     overflow-x: hidden;
+    overflow-y: hidden;
     overflow-anchor: none;
+    -ms-overflow-style: none;  
+    scrollbar-width: none;
+}
+#calendar-main::-webkit-scrollbar {
+  display: none;
 }
 
 .block {
@@ -102,7 +96,7 @@ button {
 }
 
 .calendar-day {
-    flex: 0 0 287px;
+    flex: 0 0 auto !important;
     box-sizing: border-box;
 }
 
@@ -178,10 +172,6 @@ hr {
     color: green;
 }
 
-
-
-
-/* Бічні навігаційні зони */
 .nav-zone {
     position: fixed;
     top: 0;
@@ -270,4 +260,194 @@ hr {
 .portrait img {
     box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
     margin-bottom: 5px;
+}
+
+.calendar-day {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  pointer-events: none;
+}
+
+.calendar-day.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+header {
+    position: relative;
+    background-color: #ffffff;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 75px;
+    z-index: 2000;
+}
+
+/* --- PC --- */
+@media (min-width: 769px) {
+    .nav-desktop {
+        display: flex;
+        gap: 35px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-desktop a {
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        font-size: 20px;
+        transition: color 0.3s ease;
+        margin: 0 15px;
+        font-family: 'comic sans ms', sans-serif;
+    }
+
+    .burger-btn {
+        display: none;
+    }
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    header {
+        padding: 15px 25px;
+    }
+
+    .burger-btn {
+        display: block;
+        background: #5e7bdb;
+        color: white;
+        border: none;
+        font-size: 24px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .nav-mobile {
+        display: none;
+        gap: 10px;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        padding: 10px 0;
+        z-index: 1999;
+    }
+
+    .nav-mobile.is-open {
+        display: flex;
+    }
+
+    .nav-mobile a {
+        padding: 10px 80vw;
+        text-decoration: none;
+        color: #333;
+        font-size: 18px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+        font-family: 'comic sans ms', sans-serif;
+    }
+    
+    .nav-mobile a:last-child {
+        border-bottom: none;
+    }
+}
+
+.teacher-img {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 5px;
+}
+
+/* --- MOBILE --- */
+@media (max-width: 768px) {
+    .subjects-mobile-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        padding-top: 50px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .subject-card-mobile {
+        display: flex;
+        flex-direction: column;
+        padding: 15px !important;
+        margin-bottom: 0;
+    }
+
+    .mobile-header h3 {
+        margin: 0 0 5px 0;
+        font-size: 1.2rem;
+    }
+
+    .subject-tag {
+        font-size: 14px;
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    .mobile-links-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+
+    .mobile-action-link {
+        background: #f1f5f9;
+        padding: 6px 12px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 13px;
+        color: #334155;
+        border: 1px solid #e2e8f0;
+    }
+
+    .mobile-info-block {
+        font-size: 14px;
+        background: #fcfcfc;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+    }
+
+    .text-content {
+        white-space: pre-wrap;
+        color: #4b5563;
+    }
+
+    .mobile-teachers-grid {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        gap: 15px;
+        border-top: 1px solid #eee;
+        margin-top: 10px;
+        padding-top: 15px;
+    }
+
+    .mobile-teachers-grid .portrait {
+        width: 137px;
+        text-align: center;
+    }
+
+    .teacher-img {
+        width: 100px !important;
+        height: auto;
+        object-fit: cover;
+    }
 }
