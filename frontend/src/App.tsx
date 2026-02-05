@@ -8,6 +8,7 @@ import './assets/css/fonts.css';
 import './assets/css/style.css';
 import './assets/css/auth.css';
 import SubjectsPage from './pages/SubjectsPage';
+import StatusBanner from './components/StatusBar';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
@@ -30,6 +31,7 @@ const App: React.FC = () => {
   return (
     <Router>
       <div className="app-wrapper">
+        <StatusBanner />
         <Header />
         <main>
           <Routes>

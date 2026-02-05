@@ -12,7 +12,6 @@ const LoginPage: React.FC<Props> = ({ onLogin }) => {
     e.preventDefault();
 
     try {
-      // 1. Використовуємо стандартний fetch для логіна (тут токен ще не потрібен)
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -21,22 +20,17 @@ const LoginPage: React.FC<Props> = ({ onLogin }) => {
         body: JSON.stringify({ login, password }),
       });
 
-      // 2. Отримуємо дані згідно з твоєю новою структурою AuthResponse.java
       const data = await response.json();
 
-      if (response.ok && data.token) { // Перевіряємо наявність токена
-        // 3. Зберігаємо "паспорт" уlocalStorage для protectedFetch
+      if (response.ok && data.token) {
         localStorage.setItem('token', data.token); 
         
-        // 4. Зберігаємо допоміжні дані для UI та прав доступу
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('username', data.username);
         localStorage.setItem('role', data.role);
 
-        // Повідомляємо App.tsx про успішний вхід
         onLogin();
       } else {
-        // Виводимо повідомлення про помилку з сервера
         alert(data.message || 'Помилка авторизації: Перевір логін або пароль');
       }
     } catch (error) {
