@@ -25,7 +25,7 @@ const Header: React.FC = () => {
         <Link to="/calendar" onClick={closeMenu}>Календар</Link>
         <Link to="/tasks" onClick={closeMenu}>Завдання</Link>
         <Link to="/subjects" onClick={closeMenu}>Предмети</Link>
-        <Link to="/group" onClick={closeMenu}>Група</Link>
+        <Link to="/queue" onClick={closeMenu}>Черга</Link>
       </nav>
 
       {!isMobile && <div style={{ width: '40px' }}></div>}

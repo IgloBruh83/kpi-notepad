@@ -41,3 +41,25 @@ export interface LinkDTO {
     label: string;
     url: string;
 }
+
+export interface QueueDTO {
+    id: number;
+    subjectId: number;
+    studentFullName: string;
+    studentLogin: string;
+    task: string;
+    datetime: string;
+    priority: number;
+    isCompleted: boolean;
+}
+
+export interface SubjectQueueDTO {
+    subjectId: number;
+    subjectName: string;
+    semester: number;
+    queue: QueueDTO[];
+}
+
+export interface MultiSubjectQueueDTO {
+    subjects: SubjectQueueDTO[];
+}

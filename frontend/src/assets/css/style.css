@@ -491,3 +491,135 @@ header {
 .status-close:hover {
   color: #fff;
 }
+
+#queue-main {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+    justify-content: space-between;
+    margin-top: 50px;
+
+    padding-left: 100px;
+    padding-right: 100px; 
+    box-sizing: border-box; 
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.queue-part {
+    height: min-content;
+}
+
+#queue-left {
+    width: 55%;
+}
+
+#queue-left-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#queue-right {
+    width: 35%;
+}
+
+.button-div {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4a4a4a;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-size: 18px;
+}
+
+.button-div:hover {
+  background-color: #f5f5f5;
+  border-color: #d0d0d0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.queue-element {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+#queue-table-head {
+    font-weight: bold;
+    font-size: 18px;
+}
+#queue-table-head span {
+    text-align: center;
+}
+.queue-element :nth-child(1) {
+    width: 30%;
+    padding-left: 10px;
+}
+.queue-element :nth-child(3) {
+    width: 37%;
+}
+.queue-element :nth-child(5) {
+    width: 23%;
+}
+
+.queue-me {
+    color: blue;
+    font-weight: bold;
+}
+
+input[type="text"], 
+input[type="email"], 
+input[type="number"], 
+select {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #e0e0e0; /* Світло-сіра рамка */
+    border-radius: 12px;       /* М'яке заокруглення як у карток */
+    box-sizing: border-box;
+    background-color: #ffffff;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.3s ease; /* Плавний перехід для фокусу */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02); /* Ледь помітна тінь */
+    outline: none;
+}
+
+/* Стиль при наведенні курсору */
+input:hover, select:hover {
+    border-color: #d0d0d0;
+}
+
+/* Активний стан (Фокус) */
+input:focus, select:focus {
+    border-color: #0047ff;     /* Синій колір як у виділеного студента */
+    box-shadow: 0 0 0 4px rgba(0, 71, 255, 0.1); /* М'яке сяйво навколо */
+    background-color: #fff;
+}
+
+/* Специфічні налаштування для Select (випадаючого списку) */
+select {
+    appearance: none;          /* Прибираємо стандартну стрілку браузера */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* Стиль для плейсхолдера */
+::placeholder {
+    color: #b0b0b0;
+    opacity: 1;
+}

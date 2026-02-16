@@ -9,6 +9,7 @@ import './assets/css/style.css';
 import './assets/css/auth.css';
 import SubjectsPage from './pages/SubjectsPage';
 import StatusBanner from './components/StatusBar';
+import QueuePage from './pages/QueuePage';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
@@ -38,7 +39,7 @@ const App: React.FC = () => {
             <Route path="/calendar" element={<CalendarPage />} />
             <Route path="/tasks" element={<UnderConstructionPage />} />
             <Route path="/subjects" element={<SubjectsPage />} />
-            <Route path="/group" element={<UnderConstructionPage />} />
+            <Route path="/queue" element={<QueuePage />} />
             <Route path="/" element={<Navigate to="/calendar" replace />} />
             <Route path="*" element={<Navigate to="/calendar" replace />} />
           </Routes>
