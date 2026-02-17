@@ -3,6 +3,7 @@ package edu.kpinotepad.controllers;
 import edu.kpinotepad.dto.*;
 import edu.kpinotepad.services.QueueService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,9 +31,20 @@ public class QueueController {
         return queueService.createEntry(request);
     }
 
+
     @PatchMapping("/{id}/complete")
     public ResponseEntity<Void> completeTask(@PathVariable Long id) {
         queueService.markAsCompleted(id);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteQueueElement(@PathVariable Long id) {
+        try {
+            queueService.deleteElement(id);
+            return ResponseEntity.ok().body("Запис видалено");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

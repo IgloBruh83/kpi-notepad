@@ -74,6 +74,14 @@ public class QueueService {
         queueRepository.save(element);
     }
 
+    @Transactional
+    public void deleteElement(Long id) {
+        if (!queueRepository.existsById(id)) {
+            throw new RuntimeException("Запис не знайдено");
+        }
+        queueRepository.deleteById(id);
+    }
+
     private QueueDTO convertToDTO(QueueElement entity) {
         QueueDTO dto = new QueueDTO();
         dto.setId(entity.getId());

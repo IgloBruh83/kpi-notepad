@@ -27,7 +27,6 @@ const QueuePage: React.FC = () => {
       .then(res => res.json())
       .then((json: MultiSubjectQueueDTO) => {
         setData(json.subjects);
-        // Якщо предмет ще не обраний, встановлюємо перший зі списку
         if (json.subjects.length > 0 && selectedSubjectId === 0) {
           setSelectedSubjectId(json.subjects[0].subjectId);
         }
@@ -38,6 +37,24 @@ const QueuePage: React.FC = () => {
         setLoading(false);
       });
   };
+
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Видалити запис?")) return;
+
+    try {
+        const response = await protectedFetch(`/api/queue/${id}`, {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            fetchQueue();
+        } else {
+            alert("Не вдалося видалити запис");
+        }
+    } catch (err) {
+        console.error("Помилка видалення:", err);
+    }
+};
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -112,6 +129,14 @@ const QueuePage: React.FC = () => {
                 <span>{item.studentFullName}</span><span>|</span>
                 <span>{item.task}</span><span>|</span>
                 <span>{priorityText[item.priority]}</span>
+                
+                {item.studentLogin === currentUsername && (
+                  <i 
+                    className="fa-solid fa-trash-can delete-icon"
+                    onClick={() => handleDelete(item.id)}
+                    style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}
+                  ></i>
+                )}
               </div>
               <hr />
             </React.Fragment>
