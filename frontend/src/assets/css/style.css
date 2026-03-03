@@ -639,3 +639,69 @@ select {
   opacity: 0.7;
   transform: translateY(-50%) scale(1.2);
 }
+
+@media (max-width: 768px) {
+    /* Головний контейнер у колонку */
+    #queue-main {
+        flex-direction: column;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 20px;
+        gap: 15px;
+    }
+
+    /* Блоки на всю ширину */
+    #queue-left, 
+    #queue-right {
+        width: 100% !important;
+    }
+
+    /* Скидаємо фіксовану ширину заголовка предмета */
+    #queue-left-header div[style*="width: 350px"] {
+        width: auto !important;
+        flex: 1;
+    }
+
+    /* --- ХОВАЄМО ПРІОРИТЕТ --- */
+    /* 4-й елемент - це розділювач "|", 5-й - сам текст пріоритету */
+    .queue-element :nth-child(4),
+    .queue-element :nth-child(5) {
+        display: none !important;
+    }
+
+    /* Перерозподіляємо місце між Студентом та Завданням */
+    .queue-element :nth-child(1) {
+        width: 40% !important; /* Місце для імені */
+        padding-left: 5px;
+        font-size: 13px;
+    }
+
+    .queue-element :nth-child(3) {
+        width: 60% !important; /* Все інше місце для завдання */
+        word-break: break-word;
+        font-size: 13px;
+        padding-right: 10px;
+    }
+
+    /* Заголовок таблиці */
+    #queue-table-head {
+        font-size: 15px;
+    }
+
+    /* Налаштування кнопок перемикання */
+    .button-div {
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+
+    /* Корекція іконки видалення, щоб вона не перекривала текст */
+    .delete-icon {
+        right: 5px;
+    }
+
+    /* Корекція форми додавання */
+    #queue-right h4 {
+        font-size: 18px;
+        margin-bottom: 10px !important;
+    }
+}

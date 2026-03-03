@@ -62,6 +62,14 @@ const QueuePage: React.FC = () => {
     fetchQueue();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+        console.log("Auto-refreshing queue...");
+        fetchQueue(); 
+    }, 10000);
+    return () => clearInterval(interval);
+}, [selectedSubjectId]);
+
   const handleNext = () => setCurrentIndex(prev => (prev + 1) % data.length);
   const handlePrev = () => setCurrentIndex(prev => (prev === 0 ? data.length - 1 : prev - 1));
 
@@ -121,22 +129,25 @@ const QueuePage: React.FC = () => {
             <span>Студент</span><span>|</span>
             <span>Завдання</span><span>|</span>
             <span>Пріоритет</span>
+            <span></span>
           </div>
           <hr />
           {current.queue.map(item => (
             <React.Fragment key={item.id}>
               <div className={`queue-element ${item.studentLogin === currentUsername ? 'queue-me' : ''}`}>
                 <span>{item.studentFullName}</span><span>|</span>
-                <span>{item.task}</span><span>|</span>
-                <span>{priorityText[item.priority]}</span>
+                <span style={{wordBreak: 'break-word'}}>{item.task}</span><span>|</span>
+                <span style={{textAlign: 'center'}}>{priorityText[item.priority]}</span>
                 
-                {item.studentLogin === currentUsername && (
-                  <i 
-                    className="fa-solid fa-trash-can delete-icon"
-                    onClick={() => handleDelete(item.id)}
-                    style={{ cursor: 'pointer', color: 'red', marginLeft: '10px' }}
-                  ></i>
-                )}
+                <div style={{textAlign: 'right'}}>
+                    {item.studentLogin === currentUsername && (
+                    <i 
+                        className="fa-solid fa-trash-can delete-icon"
+                        onClick={() => handleDelete(item.id)}
+                        style={{ cursor: 'pointer', color: 'red' }}
+                    ></i>
+                    )}
+                </div>
               </div>
               <hr />
             </React.Fragment>
@@ -151,6 +162,7 @@ const QueuePage: React.FC = () => {
         <select 
             value={selectedSubjectId} 
             onChange={(e) => setSelectedSubjectId(Number(e.target.value))}
+            style={{width: '100%', padding: '8px', borderRadius: '5px'}}
         >
             {data.map(subject => (
                 <option key={subject.subjectId} value={subject.subjectId}>
@@ -167,12 +179,14 @@ const QueuePage: React.FC = () => {
             placeholder="Введіть текст..." 
             value={task}
             onChange={(e) => setTask(e.target.value)}
+            style={{width: '100%', padding: '8px', borderRadius: '5px', boxSizing: 'border-box'}}
         />
 
         <label style={{fontSize: '14px', marginLeft: '5px', marginTop: '10px', display: 'block', textAlign: 'center'}}>Пріоритет</label>
         <select 
             value={priority} 
             onChange={(e) => setPriority(Number(e.target.value))}
+            style={{width: '100%', padding: '8px', borderRadius: '5px'}}
         >
             <option value={4}>Високий - Здаю поточну лабу</option>
             <option value={3}>Середній - Не хочу здавати одним з перших</option>
